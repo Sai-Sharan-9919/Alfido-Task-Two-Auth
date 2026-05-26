@@ -4,7 +4,7 @@ const authRoutes = require('./routes/authRoutes');
 const protect = require('./middleware/authMiddleware');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware parsing rules
 app.use(express.json());
@@ -22,6 +22,13 @@ app.get('/api/dashboard', protect, (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend Auth Server running smoothly on port ${PORT}`);
-});
+// CRITICAL FIX FOR VERCEL SERVERLESS ENVIRONMENT:
+// Only run app.listen if we are running locally, not on Vercel's cloud platform.
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Backend Auth Server running smoothly on port ${PORT}`);
+  });
+}
+
+// Export the app instance for Vercel's routing handler engine
+module.exports = app;
