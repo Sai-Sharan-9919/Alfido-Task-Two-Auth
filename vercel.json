@@ -1,6 +1,12 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/server.js" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "version": 2,
+  "builds": [
+    { "src": "backend/server.js", "use": "@vercel/node" },
+    { "src": "package.json", "use": "@vercel/static-build" }
+  ],
+  "routes": [
+    { "source": "/api/auth/(.*)", "dest": "backend/server.js" },
+    { "source": "/api/dashboard", "dest": "backend/server.js" },
+    { "source": "/(.*)", "dest": "/index.html" }
   ]
 }
